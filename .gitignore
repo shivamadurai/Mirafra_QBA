@@ -1,0 +1,5 @@
+build.log
+npm-debug.log
+tmp
+.map
+auth-token.js

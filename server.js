@@ -153,8 +153,6 @@ app.post('/api/photos', function (req, res) {
         icon = (icon.constructor == Array) ? icon[0] : icon;        
         var fileType = icon.originalFilename.split('.').pop(),
             fileName = icon.originalFilename.split('.')[0];
-
-        console.log(fileName, fileType,icon.path, __dirname + "\\uploads\\"+icon.originalFilename);
         
         
         fs.readFile(icon.path, function (err, data) {

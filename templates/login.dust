@@ -1,0 +1,23 @@
+<div class="ui-grid-solo">
+    <div class="ui-block-a">
+       <div class="logo"></div>
+    </div>
+</div>
+<div class="ui-grid-solo login">
+    <form method="post" action="/login" data-ajax=false>
+        <div class="ui-block-a">
+            <input type="email" name="email" placeholder="LDAP Username"/>
+        </div>
+        <div class="ui-block-a">
+            <input type="password" name="password" placeholder="LDAP Password"/>
+        </div>
+        <div class="ui-block-a">
+            <a href="">Forgot Password?</a>
+        </div>
+        <div class="ui-block-a">
+            <input type="reset" Value="Reset"/>
+            <input type="submit" Value="Log In"/>
+            <input type="submit" value="Guest"/>
+        </div>
+    </form>
+</div>

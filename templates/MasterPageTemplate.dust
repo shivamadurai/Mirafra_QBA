@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>PDP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='http://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="/css/pdp/style.css">
+
+<link rel="stylesheet" href="http://cdn.kendostatic.com/2014.3.1411/styles/kendo.common.min.css" />
+<link rel="stylesheet" href="http://cdn.kendostatic.com/2014.3.1411/styles/kendo.default.min.css" />
+<link rel="stylesheet" href="http://cdn.kendostatic.com/2014.3.1411/styles/kendo.dataviz.min.css" />
+<link rel="stylesheet" href="http://cdn.kendostatic.com/2014.3.1411/styles/kendo.dataviz.default.min.css" />
+</head>
+
+<body>
+<script src="/js/pdp/jquery-1.10.2.min.js"></script>
+<script src="/js/pdp/angular.min.js"></script>
+<script src="http://cdn.kendostatic.com/2014.3.1411/js/kendo.all.min.js"></script>
+	{#Pages}
+		{>"Page"/}
+	{/Pages}
+
+
+</body>
+</html>

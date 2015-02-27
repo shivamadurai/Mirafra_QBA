@@ -1,0 +1,118 @@
+
+<div class="container" ng-app="Selectbox" ng-controller="SelectController">
+	<form method="post" action="/createQuestion">
+		<h3> Create New Question</h3>
+		<div class="category" >
+			<div>
+				<select id="subjectOption" ng-change="SubjectChange(this, event)" ng-model="selectedSubject" ng-options="sub.SubjectId as sub.SubjectName for sub in subjects"><option value="">-- Select Subject --</option></select>
+				<input type="hidden" name="subject" id="subject" value="{~lb}{~lb}selectedSubject{~rb}{~rb}"/>
+				
+			</div>
+
+			<div>
+				<select id="subtopicOption" ng-model="selectedSubtopic" ng-options="subt.SubTopicId as subt.Title for subt in subtopics"><option value="">-- Select SubTopic --</option></select>
+				<input type="hidden" name="subtopic" id="subtopic" value="{~lb}{~lb}selectedSubtopic{~rb}{~rb}"/>
+
+			</div>
+		</div>
+
+		<div class="textfieldsContainer">
+		
+			<addbuttonsbutton></addbuttonsbutton>
+			<div id="inputFields">
+			</div>
+		<input type="hidden" name="timestamp" id="timestamp" value="{~lb}{~lb}timestamp{~rb}{~rb}"/>
+		<div>
+		</div>
+		<input type="submit" value="Submit" />
+	</form>
+</div>
+
+<script>
+var pdpApp = angular.module("Selectbox",[]);
+pdpApp.controller("SelectController",function($scope, $http){
+
+	$scope.count = 0;
+	/*var subjectsRequest = $http.get("/pdp/subjects");
+	
+        subjectsRequest.success(function(data, status, headers, config) {
+            $scope.subjects = data;
+        });
+        subjectsRequest.error(function(data, status, headers, config) {
+
+            console.log("error",data, status, headers, config);
+        });
+
+        $scope.timestamp = (new Date()).getTime();
+
+        $scope.SubjectChange = function(elem, event){
+        	
+        	var subjectSelected = this.selectedSubject;
+        	$scope.subtopics = [];
+        	var subTopicRequest = $http.post("/pdp/subtopics",{"subjectid":subjectSelected});
+        	subTopicRequest.success(function(data, status, headers, config) {
+	            $scope.subtopics = data;
+	        });
+	        subTopicRequest.error(function(data, status, headers, config) {
+
+	            console.log("error",data, status, headers, config);
+	        });
+        }*/
+
+
+
+
+        
+});
+pdpApp.directive("addbuttonsbutton", function(){
+	return {
+		restrict: "E",
+		template: "<div class='ctrlButtons'><input data-addtextarea type='button' value='Add Description'/><input data-addimage type='button' value='Add Image'/><input data-addcodesnippet type='button' value='Add Code'/></div>"
+	}
+});
+pdpApp.directive("addtextarea", function($compile){
+	return function(scope, element, attrs){
+		element.bind("click", function(){
+			console.log(scope, scope.count);
+			scope.count++;
+			angular.element($("#inputFields").append($compile("<textarea name='desc-text"+scope.count +"' rows='4' cols='50'></textarea>")(scope)));
+		});
+	};
+});
+
+pdpApp.directive("addimage", function($compile){
+	return function(scope, element, attrs){
+		element.bind("click", function(){
+			console.log(scope, scope.count);
+			scope.count++;
+			angular.element($("#inputFields").append($compile("<form method='post' action='/api/photos' enctype='multipart/form-data'><input id='userPhotoInput' type='file' name='desc-img"+scope.count +"' accept='.png,.jpg,.jpeg'/><input type='button' value='upload' onclick='upload(this)'/></form>")(scope)));
+		});
+	};
+});
+pdpApp.directive("addcodesnippet", function($compile){
+	return function(scope, element, attrs){
+		element.bind("click", function(){
+			console.log(scope, scope.count);
+			scope.count++;
+			angular.element($("#inputFields").append($compile("<textarea name='desc-code"+scope.count +"' rows='4' cols='50'></textarea>")(scope)));
+		});
+	};
+});
+
+
+	$('#userPhotoInput').delegate('change',function () {
+	  console.log(this.files[0]);
+	});
+
+	function upload(elem) {
+			
+			console.log('here');
+			var element = jQuery(elem);
+			var formElement = element.closest('form');
+			formElement.submit();
+			var formData = new FormData(formElement);
+			console.log(formData);			
+
+		}
+
+</script>

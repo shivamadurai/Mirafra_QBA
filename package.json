@@ -1,0 +1,15 @@
+{
+  "name" : "PDP",
+  "version" : "0.0.1",
+   "private": true,
+   "dependencies": {
+       "express": "3.x",
+       "dustjs-linkedin" : "2.3.*",
+       "dustjs-helpers" : "*",
+       "consolidate" : "*",
+       "q" : "*",
+       "mysql": "^2.5.4",
+       "multer": "~0.1.6",
+       "node-ckeditor" : "*"
+   }
+}

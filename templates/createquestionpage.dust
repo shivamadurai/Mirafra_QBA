@@ -1,3 +1,11 @@
+	<script src="/ckeditor/ckeditor.js"></script>
+	<script src="/ckeditor/highlight.js"></script>
+
+	<script src="/ckeditor/adapters/jquery.js"></script>
+	
+
+	<link rel="stylesheet" type="text/css" href="/ckeditor/contents.css"></link>
+	<link rel="stylesheet" type="text/css" href="/ckeditor/highlight.css"></link>
 
 <div class="container" ng-app="Selectbox" ng-controller="SelectController">
 	<form method="post" action="/createQuestion">
@@ -14,12 +22,50 @@
 				<input type="hidden" name="subtopic" id="subtopic" value="{~lb}{~lb}selectedSubtopic{~rb}{~rb}"/>
 
 			</div>
+
+			<div>
+			<label>Answer Type: </label><select id='answer_type' ng-model='answerType' ng-options="at.AnswerTypeId as at.State for at in answertypes">
+				<option value="">-- Type --</option>
+			</select>
+			</div>
+
 		</div>
 
 		<div class="textfieldsContainer">
-		
+
 			<addbuttonsbutton></addbuttonsbutton>
-			<div id="inputFields">
+			<div id="question">
+			<h4> Question:</h4>
+				<div class="description">
+					<label>Description: </label><textarea name='question_description' rows='4' cols='50'></textarea>
+				</div>
+				<div class="image">
+					<input id='userPhotoInput' type='file' name='question_image' accept='.png,.jpg,.jpeg' onchange='PreviewImage(this, event);'/><img class='preview' style='width: 100px; height: 100px;' />
+				</div>
+			</div>
+
+			<div id='answers'>
+			<h4> Answer: </h4>
+			
+			<input type='hidden' name='answer_type' value='{~lb}{~lb}answerType{~rb}{~rb}'/>
+
+
+				<div class='option_a'>
+					<div class="description">
+						<label>Description: </label><textarea name='desc-text"+scope.count +"' rows='4' cols='50'></textarea>
+					</div>
+					<div class="image">
+						<input id='userPhotoInput' type='file' name='desc-img"+scope.count +"' accept='.png,.jpg,.jpeg' onchange='PreviewImage(this, event);'/><img class='preview' style='width: 100px; height: 100px;' />
+					</div>
+				</div>
+
+			<label>Result:</label><select id='answer' ng-model='answer' {~lb}{~lb}answerType{~rb}{~rb} >
+				<option value="">-- Type --</option>
+				<option value='option_a' selected='selected'>Option A</option>
+				<option value='option_b' selected='selected'>Option B</option>
+				<option value='option_c' selected='selected'>Option C</option>
+				<option value='option_d' selected='selected'>Option D</option>
+			</select>
 			</div>
 		<input type="hidden" name="timestamp" id="timestamp" value="{~lb}{~lb}timestamp{~rb}{~rb}"/>
 		<div>
@@ -33,7 +79,7 @@ var pdpApp = angular.module("Selectbox",[]);
 pdpApp.controller("SelectController",function($scope, $http){
 
 	$scope.count = 0;
-	/*var subjectsRequest = $http.get("/pdp/subjects");
+		var subjectsRequest = $http.get("/qba/subjects");
 	
         subjectsRequest.success(function(data, status, headers, config) {
             $scope.subjects = data;
@@ -49,7 +95,7 @@ pdpApp.controller("SelectController",function($scope, $http){
         	
         	var subjectSelected = this.selectedSubject;
         	$scope.subtopics = [];
-        	var subTopicRequest = $http.post("/pdp/subtopics",{"subjectid":subjectSelected});
+        	var subTopicRequest = $http.post("/qba/subtopics",{"subjectid":subjectSelected});
         	subTopicRequest.success(function(data, status, headers, config) {
 	            $scope.subtopics = data;
 	        });
@@ -57,62 +103,53 @@ pdpApp.controller("SelectController",function($scope, $http){
 
 	            console.log("error",data, status, headers, config);
 	        });
-        }*/
+        };
 
+        var answerTypeRequest = $http.get("/qba/answertypes");
+	
+        answerTypeRequest.success(function(data, status, headers, config) {
+            $scope.answertypes = data;
+        });
+        answerTypeRequest.error(function(data, status, headers, config) {
 
+            console.log("error",data, status, headers, config);
+        });
 
-
-        
-});
-pdpApp.directive("addbuttonsbutton", function(){
-	return {
-		restrict: "E",
-		template: "<div class='ctrlButtons'><input data-addtextarea type='button' value='Add Description'/><input data-addimage type='button' value='Add Image'/><input data-addcodesnippet type='button' value='Add Code'/></div>"
-	}
-});
-pdpApp.directive("addtextarea", function($compile){
-	return function(scope, element, attrs){
-		element.bind("click", function(){
-			console.log(scope, scope.count);
-			scope.count++;
-			angular.element($("#inputFields").append($compile("<textarea name='desc-text"+scope.count +"' rows='4' cols='50'></textarea>")(scope)));
-		});
-	};
-});
-
-pdpApp.directive("addimage", function($compile){
-	return function(scope, element, attrs){
-		element.bind("click", function(){
-			console.log(scope, scope.count);
-			scope.count++;
-			angular.element($("#inputFields").append($compile("<form method='post' action='/api/photos' enctype='multipart/form-data'><input id='userPhotoInput' type='file' name='desc-img"+scope.count +"' accept='.png,.jpg,.jpeg'/><input type='button' value='upload' onclick='upload(this)'/></form>")(scope)));
-		});
-	};
-});
-pdpApp.directive("addcodesnippet", function($compile){
-	return function(scope, element, attrs){
-		element.bind("click", function(){
-			console.log(scope, scope.count);
-			scope.count++;
-			angular.element($("#inputFields").append($compile("<textarea name='desc-code"+scope.count +"' rows='4' cols='50'></textarea>")(scope)));
-		});
-	};
+                
 });
 
 
-	$('#userPhotoInput').delegate('change',function () {
-	  console.log(this.files[0]);
-	});
+var PreviewImage = function(elem, event) {
+	var element = $(elem);
+    var oFReader = new FileReader();
+    oFReader.readAsDataURL(element[0].files[0]);
 
-	function upload(elem) {
+    oFReader.onload = function (oFREvent) {
+        element.next('img').attr('src', oFREvent.target.result);
+    };
+};
+
+CKEDITOR.tools.setTimeout( function(){ 
+	$( 'textarea' ).ckeditor();
+}, 0);
+
+
+		// We need to turn off the automatic editor creation first.
+		CKEDITOR.disableAutoInline = true;
+		/*CKEDITOR.config.extraPlugins = 'filebrowser';
+
+		CKEDITOR.replace('test', {
+	        filebrowserBrowseUrl : '/browser/browse.php',
+	        filebrowserUploadUrl : '/uploader/upload.php'
+	    });*/
+
+
+		
+
 			
-			console.log('here');
-			var element = jQuery(elem);
-			var formElement = element.closest('form');
-			formElement.submit();
-			var formData = new FormData(formElement);
-			console.log(formData);			
 
-		}
 
+
+
+	
 </script>

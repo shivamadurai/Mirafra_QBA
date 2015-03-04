@@ -1,11 +1,14 @@
-<div id="{pagetype}" data-role="page">
+<div id="{pagetype}" class="page">
     {!  Body Content  !}
     <div data-role="content">
         {@select key="{pagetype}"}
             {@eq value="login"}
                 {>"login"/}
             {/eq}
-            {@eq value="logged"}
+            {@eq value="dashboard"}
+                {>"dashboard"/}
+            {/eq}
+            {@eq value="createquestion"}
                 {>"createquestionpage"/}
             {/eq}
         {/select}

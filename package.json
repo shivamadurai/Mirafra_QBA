@@ -10,6 +10,7 @@
        "q" : "*",
        "mysql": "^2.5.4",
        "multer": "~0.1.6",
-       "node-ckeditor" : "*"
+       "node-ckeditor" : "*",
+       "imap" : "*"
    }
 }

@@ -10,17 +10,16 @@ var express = require('express'),
     Q = require('q'),
     mysql      = require('mysql'),
     authCredential = require('./auth-token'),
-    multer  = require('multer'),
-    ckStaticsPath = require('node-ckeditor');;
+    Imap = require('imap');
 
 var done = false;
 
 var connection = mysql.createConnection({
-  host     : '192.168.1.77',
-  user     : 'root',
-  password : 'mirafra123',
-  database : 'test',
-  port: '3306'
+  host     : authCredential['connection']['host'],
+  user     : authCredential['connection']['user'],
+  password : authCredential['connection']['password'],
+  database : authCredential['connection']['database'],
+  port : authCredential['connection']['port']
 });
    
 
@@ -65,7 +64,22 @@ app.get('/', auth, function (req, res) {
     //console.log(accountsJSON, talentpoolJSON, openpositionsJSON);
     res.render('MasterPageTemplate', {
         "Pages": [{
-            'pagetype': 'logged'
+            'pagetype': 'dashboard',
+            'path' : '/'
+        }]
+    });
+
+    
+});
+
+// Create Questions page
+app.get('/createquest', auth, function (req, res) {
+
+    //console.log(accountsJSON, talentpoolJSON, openpositionsJSON);
+    res.render('MasterPageTemplate', {
+        "Pages": [{
+            'pagetype': 'createquestion',
+            'path' : '/'
         }]
     });
 
@@ -75,8 +89,32 @@ app.get('/', auth, function (req, res) {
 app.post('/login', function (req, res) {
     var email = req.body.email,
         password = req.body.password;
+
+
+    /*var imap = new Imap ({
+        user: email,
+        password: password,
+        host: '192.168.1.2',
+    });
+    imap.connect();
+    
+    imap.once('ready', function() {
+        console.log(imap);
+
+    });
+
+    imap.once('error', function(err) {
+      console.log(err);
+    });
+     
+    imap.once('end', function() {
+      console.log('Connection ended');
+    });
+    */
+     
+    
         
-    if(authCredential[email] && authCredential[email] == password){
+    if(authCredential['login'][email] && authCredential['login'][email] == password){
         req.session.regenerate(function () {
             req.session.isAuthenticated = true;
             req.session.token = email+(new Date()).getTime();
@@ -99,7 +137,7 @@ app.get('/logout', function (req, res) {
 /*
 *** Route Service to Provide Subjects from Database
 */
-app.get('/pdp/subjects', function (req, res) {
+app.get('/qba/subjects', function (req, res) {
 
     connection.query('SELECT SubjectId , SubjectName from Subjects', function(err, rows, fields) {
         
@@ -120,9 +158,28 @@ app.get('/pdp/subjects', function (req, res) {
 /*
 *** Route Service to Provide SubTopics from Database for Selected Subject
 */
-app.post('/pdp/subtopics', function (req, res) {
-    var selectedSubject = req.body.subjectid
+app.post('/qba/subtopics', function (req, res) {
+    var selectedSubject = req.body.subjectid;
     connection.query('SELECT SubTopicId , Title from SubTopics where SubjectId = "'+selectedSubject+'"', function(err, rows, fields) {
+
+        if (!err){
+            //console.log('The subTopics are: ', rows);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(rows));
+        }  else {
+            console.log('Error while performing Query.',err);
+        }
+        
+      });
+    
+});
+
+/*
+*** Route Service to Provide Answer Types from Database
+*/
+app.post('/qba/answertypes', function (req, res) {
+    
+    connection.query('SELECT AnswerTypeId , State from AnswerType', function(err, rows, fields) {
 
         if (!err){
             //console.log('The subTopics are: ', rows);
@@ -153,6 +210,8 @@ app.post('/api/photos', function (req, res) {
         icon = (icon.constructor == Array) ? icon[0] : icon;        
         var fileType = icon.originalFilename.split('.').pop(),
             fileName = icon.originalFilename.split('.')[0];
+
+        console.log(fileName, fileType,icon.path, __dirname + "\\uploads\\"+icon.originalFilename);
         
         
         fs.readFile(icon.path, function (err, data) {
@@ -177,7 +236,7 @@ app.post('/api/photos', function (req, res) {
 /*
 *** Route Service to Create Question in Questions Table in DB
 */
-app.post('/createQuestion', function (req, res) {
+app.post('/createquestion', function (req, res) {
     console.log(req.body);
     var parameters = req.body;
     var obj = {};

@@ -1,0 +1,9 @@
+<div class="qba_header">
+
+ 	<div class="ui-block-a">
+       <div class="page_logo"></div>
+       <div class="user_info">
+	    	<label> Welcome {username}, <a href="/logout">Logout</a>
+	    </div>
+    </div>
+</div>

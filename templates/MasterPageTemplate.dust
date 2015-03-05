@@ -4,11 +4,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href='http://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="/css/pdp/style.css">
+<link rel="stylesheet" href="/css/pdp/jquery-ui.min.css">
 
 </head>
 
 <body>
 <script src="/js/pdp/jquery-1.10.2.min.js"></script>
+<script src="/js/pdp/jquery-ui.min.js"></script>
 <script src="/js/pdp/angular.min.js"></script>
 	{#Pages}
 		{>"Page"/}

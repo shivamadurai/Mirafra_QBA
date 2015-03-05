@@ -624,11 +624,24 @@ font-size:14px;
 	padding:7px 10px !important;
 }
 
-.logo {
+.qba_header{
+	border: 1px solid green;
+}
+
+.logo, .page_logo {
 	width:240px;
 	height:66px;
 	background:url(../../images/mirafra-logo.png) no-repeat;
 	margin: 10% auto 20px;
+}
+.page_logo{
+	margin: 10px;
+}
+
+.user_info{
+	position: absolute;
+    right: 40px;
+    top: 55px;
 }
 
 .logo-img {
@@ -693,3 +706,99 @@ font-size:14px;
 }
 #companyNewsHolder p{ text-align: center;}
 #companyNewsHolder p span{ position: absolute}
+
+
+/* QBA styles*/
+ul.category_hdr{
+	display: block;
+	width: 100%;
+}
+ul.category_hdr_preview{
+	width: 90%;
+}
+ul.category_hdr li{
+	display: inline-block;
+	list-style: none;
+	width: 20%;
+	margin: 0 2% 0;
+	text-align: center;
+}
+ul.category_hdr li label.cat_heading{
+	display: inline-block;
+	font-size: 15px;
+	color: green;
+}
+ul.category_hdr li select{
+	width: 100%;
+}
+div.textfieldsContainer{
+	width: 100%;
+}
+div.description, div.preview_question {
+	width: 65%;
+	display: inline-block;
+	position: relative;
+	height: 310px;
+}
+
+div.image{
+	display: inline-block;
+	width: 30%;
+	position: absolute;
+	margin: 0 0 0 10px;
+
+}
+
+div.image div.upload{
+	width: 157px;
+    height: 57px;
+    background: url(../../images/upload.png);
+    overflow: hidden;
+}
+
+div.image div.upload input {
+    display: block !important;
+    width: 157px !important;
+    height: 57px !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+}
+div.image div.upload img {
+    
+    height: 240px;
+    position: absolute;
+    top: 65px;
+    width: 300px;
+
+}
+
+div#answers div.options{
+	width: 49%;
+	float: left;
+	margin: 0 0 10px 0;
+}
+
+div#answers div.image div.upload img {
+    
+    height: 160px;
+    top: 65px;
+    width: 160px;
+
+}
+
+div#ans_result input{
+	margin: 0 0 20px 10px;
+}
+
+.left_30{
+	margin: 0 0 0 30px;
+}
+#button_ctrls{
+	width: 50%;
+	margin: 20px auto 0;
+}
+#button_ctrls input{
+	width: 24%;
+	margin: 0 3%;
+	cursor: pointer;
+}

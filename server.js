@@ -65,7 +65,7 @@ app.get('/', auth, function (req, res) {
     res.render('MasterPageTemplate', {
         "Pages": [{
             'pagetype': 'dashboard',
-            'path' : '/'
+            'username' : req.session.username
         }]
     });
 
@@ -79,7 +79,7 @@ app.get('/createquest', auth, function (req, res) {
     res.render('MasterPageTemplate', {
         "Pages": [{
             'pagetype': 'createquestion',
-            'path' : '/'
+            'username' : req.session.username
         }]
     });
 
@@ -119,6 +119,7 @@ app.post('/login', function (req, res) {
             req.session.isAuthenticated = true;
             req.session.token = email+(new Date()).getTime();
             req.session.email = email;
+            req.session.username = email.split('@')[0];
             res.redirect('/');
         });
     } else {
@@ -138,7 +139,7 @@ app.get('/logout', function (req, res) {
 *** Route Service to Provide Subjects from Database
 */
 app.get('/qba/subjects', function (req, res) {
-
+    
     connection.query('SELECT SubjectId , SubjectName from Subjects', function(err, rows, fields) {
         
         //connection.end();
@@ -177,12 +178,31 @@ app.post('/qba/subtopics', function (req, res) {
 /*
 *** Route Service to Provide Answer Types from Database
 */
-app.post('/qba/answertypes', function (req, res) {
+app.get('/qba/answertypes', function (req, res) {
     
     connection.query('SELECT AnswerTypeId , State from AnswerType', function(err, rows, fields) {
 
         if (!err){
-            //console.log('The subTopics are: ', rows);
+//            console.log('The Answertypes are: ', rows);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(rows));
+        }  else {
+            console.log('Error while performing Query.',err);
+        }
+        
+      });
+    
+});
+
+/*
+*** Route Service to Provide Question Levels from Database
+*/
+app.get('/qba/questionlevels', function (req, res) {
+    
+    connection.query('SELECT TypeId , State from Types', function(err, rows, fields) {
+
+        if (!err){
+//            console.log('The Answertypes are: ', rows);
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(rows));
         }  else {
@@ -237,26 +257,12 @@ app.post('/api/photos', function (req, res) {
 *** Route Service to Create Question in Questions Table in DB
 */
 app.post('/createquestion', function (req, res) {
-    console.log(req.body);
+    console.log(req.body, req.files);
     var parameters = req.body;
     var obj = {};
-    var description = "";
-    for(var x in parameters){
-        obj['QuestionId'] = "Qu-02";
-        obj['SubTopicId'] = parameters['subtopic'];
+    console.log(parameters);
 
-        if(x.indexOf('-text') > -1){
-            parameters[x] = "<p>"+parameters[x]+"</p>";
-        } else if(x.indexOf('-code') > -1){
-            parameters[x] = "<pre>"+parameters[x]+"</pre>";
-        }
-
-        if(x.indexOf('desc-') > -1){
-            description += parameters[x];
-        }
-    }
-    obj['Description'] = encodeURI(description);
-    console.log(JSON.stringify(obj));
+   /* console.log(JSON.stringify(obj));
     connection.query('INSERT INTO Questions SET ?', obj, function(error){
         if(error){
 
@@ -266,8 +272,7 @@ app.post('/createquestion', function (req, res) {
           res.end("Successfully created");
 
         }
-      });
-    console.log(parameters);
+      });*/
     
 });
 

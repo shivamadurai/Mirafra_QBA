@@ -772,6 +772,16 @@ div.image div.upload img {
 
 }
 
+div.estimates{
+	position: relative;
+	top: 65px;
+}
+
+div#ans_result{
+	position: relative;
+	top: 65px;
+}
+
 div#answers div.options{
 	width: 49%;
 	float: left;
@@ -796,6 +806,8 @@ div#ans_result input{
 #button_ctrls{
 	width: 50%;
 	margin: 20px auto 0;
+	position: relative;
+	top: 50px;
 }
 #button_ctrls input{
 	width: 24%;

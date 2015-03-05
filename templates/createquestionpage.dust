@@ -115,11 +115,12 @@
 				</div>
 			</div>
 
+		<div class="estimates">
+			<h2> Time Estimate: <span style="font-size:11px;">(In Minutes)</span></h2>
+			<input type="number" name="time_estimate" value=""/>
+		</div>
 		<div id="ans_result">
-			<div>
-				<h2> Time Estimate: <span style="font-size:11px;">(In Minutes)</span></h2>
-				<input type="number" name="time_estimate" value=""/>
-			</div>
+			
 			<h2> Answer <span style="font-size:11px;">(Select the appropriate Question Type)</span>:</h2>
 			<div id="single_answer" class="left_30" style="display:none">
 				<label><input type="radio" name="answer" value="A"/>Option A</label>

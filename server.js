@@ -178,9 +178,9 @@ app.post('/qba/subtopics', function (req, res) {
 /*
 *** Route Service to Provide Answer Types from Database
 */
-app.get('/qba/answertypes', function (req, res) {
+app.get('/qba/questiontypes', function (req, res) {
     
-    connection.query('SELECT AnswerTypeId , State from AnswerType', function(err, rows, fields) {
+    connection.query('SELECT QuestionTypeId , State from QuestionType', function(err, rows, fields) {
 
         if (!err){
 //            console.log('The Answertypes are: ', rows);
@@ -199,7 +199,7 @@ app.get('/qba/answertypes', function (req, res) {
 */
 app.get('/qba/questionlevels', function (req, res) {
     
-    connection.query('SELECT TypeId , State from Types', function(err, rows, fields) {
+    connection.query('SELECT QuestionLevelId , State from QuestionLevel', function(err, rows, fields) {
 
         if (!err){
 //            console.log('The Answertypes are: ', rows);

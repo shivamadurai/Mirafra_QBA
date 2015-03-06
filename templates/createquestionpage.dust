@@ -29,15 +29,15 @@
 
 			<li>
 				<label class="cat_heading">Question type</label>
-				<select id='answer_type' ng-change="AnswerTypeChange(this, event)" ng-model='obj.z' ng-options=" at.State for at in answertypes"><option value="">-- Question Type --</option></select>
-				<input type="hidden" name="answertype" value="{~lb}{~lb}obj.z.AnswerTypeId{~rb}{~rb}"/>
+				<select id='answer_type' ng-change="AnswerTypeChange(this, event)" ng-model='obj.z' ng-options=" at.State for at in questiontypes"><option value="">-- Question Type --</option></select>
+				<input type="hidden" name="answertype" value="{~lb}{~lb}obj.z.QuestionTypeId{~rb}{~rb}"/>
 			</li>
 
 
 			<li>
 				<label class="cat_heading">Question Level</label>
 				<select id='question_level_type' ng-model='obj.a' ng-options=" quesLev.State for quesLev in questionlevels"><option value="">-- Question Level --</option></select>
-				<input type="hidden" name="answertype" value="{~lb}{~lb}obj.a.TypeId{~rb}{~rb}"/>
+				<input type="hidden" name="answertype" value="{~lb}{~lb}obj.a.QuestionLevelId{~rb}{~rb}"/>
 			</li>
 
 		</ul>
@@ -220,16 +220,20 @@ pdpApp.controller("SelectController",function($scope, $http){
         	}
         };
 
-        var answerTypeRequest = $http.get("/qba/answertypes");
+
+        
+        var answerTypeRequest = $http.get("/qba/questiontypes");
 	
         answerTypeRequest.success(function(data, status, headers, config) {
-            $scope.answertypes = data;
+            $scope.questiontypes = data;
         });
         answerTypeRequest.error(function(data, status, headers, config) {
             console.log("error",data, status, headers, config);
         });
 
-         var questionLevelRequest = $http.get("/qba/questionlevels");
+
+        
+        var questionLevelRequest = $http.get("/qba/questionlevels");
 	
         questionLevelRequest.success(function(data, status, headers, config) {
             $scope.questionlevels = data;

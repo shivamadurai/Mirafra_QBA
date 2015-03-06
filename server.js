@@ -65,7 +65,9 @@ app.get('/', auth, function (req, res) {
     res.render('MasterPageTemplate', {
         "Pages": [{
             'pagetype': 'dashboard',
-            'username' : req.session.username
+            'username' : req.session.username,
+            'userid' : authCredential['userid'],
+            'approverid' : authCredential['approverid']
         }]
     });
 
@@ -79,7 +81,9 @@ app.get('/createquest', auth, function (req, res) {
     res.render('MasterPageTemplate', {
         "Pages": [{
             'pagetype': 'createquestion',
-            'username' : req.session.username
+            'username' : req.session.username,
+            'userid' : authCredential['userid'],
+            'approverid' : authCredential['approverid']
         }]
     });
 
@@ -216,36 +220,7 @@ app.get('/qba/questionlevels', function (req, res) {
 app.post('/api/photos', function (req, res) {
     //console.log(req.files);
 
-    var files = req.files,
-        buckets = req.body.buckets ? req.body.buckets.split(',') : [],
-        insObj = [],
-        newArr = [],
-        key = 0;    
-    files = (files.constructor == Array) ? files : [files];
-    for (var file in files[0]) {       
-        newArr.push(files[0][file]);
-    }
-    //console.log( newArr);
-    newArr.forEach(function(icon) {
-        icon = (icon.constructor == Array) ? icon[0] : icon;        
-        var fileType = icon.originalFilename.split('.').pop(),
-            fileName = icon.originalFilename.split('.')[0];
-
-        console.log(fileName, fileType,icon.path, __dirname + "\\uploads\\"+icon.originalFilename);
-        
-        
-        fs.readFile(icon.path, function (err, data) {
-          // ...
-          var newPath = __dirname + "\\uploads\\" +icon.originalFilename;
-          console.log(newPath,data);
-
-          fs.writeFile(newPath, data, function (err) {
-            res.redirect("back");
-          });
-        });
     
-        
-    });
      
     
 });
@@ -257,11 +232,119 @@ app.post('/api/photos', function (req, res) {
 *** Route Service to Create Question in Questions Table in DB
 */
 app.post('/createquestion', function (req, res) {
-    console.log(req.body, req.files);
+    console.log( req.files);
     var parameters = req.body;
     var obj = {};
-    console.log(parameters);
+    var uploadedImg = [];
 
+    var lastRow = "", noOfImg = 0;
+    connection.query('SELECT QuestionId FROM Questions ORDER BY QuestionId DESC LIMIT 1', function(err, rows, fields) {
+        if (!err){
+           lastRow = (rows.length > 0 )?rows[0].QuestionId : "";
+           console.log("lastRow",rows[0].QuestionId);
+            var questionId = (lastRow != "") ? "Qu-"+(Number(lastRow.split('-')[1]) + 1) : "Qu-1";
+            //console.log(questionId);
+            UpdateValuesToDB(questionId);
+        }  else {
+            console.log('Error while performing Query.',err);
+        }
+        
+    });
+
+    function UpdateValuesToDB(questionId){
+
+        var timeNow = (new Date()).getTime();
+        
+        
+        var obj = {};
+
+        Q.all([
+            CheckImage("question_image", questionId, timeNow++),
+            CheckImage("optionA_image", questionId, timeNow++),
+            CheckImage("optionB_image", questionId, timeNow++),
+            CheckImage("optionC_image", questionId, timeNow++),
+            CheckImage("optionD_image", questionId, timeNow++),
+
+        ]).then(function(){
+
+            obj['QuestionId'] = questionId;
+            obj['SubTopicId'] = parameters['subtopic'];
+            obj['Description'] = parameters['question_description'] + uploadedImg["question_image"];
+            obj['OptionA'] = parameters['optionA_description'] + uploadedImg["optionA_image"];
+            obj['OptionB'] = parameters['optionB_description'] + uploadedImg["optionB_image"];
+            obj['OptionC'] = parameters['optionC_description'] + uploadedImg["optionC_image"];
+            obj['OptionD'] = parameters['optionD_description'] + uploadedImg["optionD_image"];
+            obj['QuestionTypeId'] = parameters['questiontype'];
+            obj['Answer'] = ((parameters['answer']).constructor == Array) ? parameters['answer'].join() : parameters['answer'];
+            obj['AuthorId'] = parameters['authorid'];
+            obj['ApproverId'] = parameters['approverid'];
+            obj['StatusId'] = 2;
+            obj['Created'] = timeNow;
+            obj['Updated'] = timeNow;
+            obj['FrequancyCount'] = 0;
+            obj['QuestionLevelId'] = parameters['questionlevel'];
+            obj['Duration'] = parameters['time_estimate'];
+
+            console.log(obj);
+            connection.query('INSERT INTO Questions SET ?', obj, function(error){
+                if(error){
+
+                  console.log(error.message);
+                  res.end("Error in Db updation");
+                }else{
+                  console.log('success');
+                  res.end("Successfully created");
+
+                }
+              });
+        });
+    }
+
+   function CheckImage(location, questionId, timeindex){
+
+        var files = req.files,
+            buckets = req.body.buckets ? req.body.buckets.split(',') : [],
+            insObj = [],
+            newArr = [],
+            key = 0; 
+            noOfImg++;
+        var deferred = Q.defer();   
+        var timeNow = (new Date()).getTime();
+        var imgFile = files[location];
+        var imgSize = imgFile.size;
+
+        if(imgSize == 0) {
+            uploadedImg[location] = "";
+            deferred.resolve();
+
+        } else {
+
+            var fileType = imgFile.originalFilename.split('.').pop(),
+                fileName = imgFile.originalFilename.split('.')[0];
+
+            fs.readFile(imgFile.path, function (err, data) {
+                var newName = fileName+timeindex+"."+fileType
+                var newPath = __dirname + "/static/upload-images/"+questionId+"-"+newName;
+              
+              //console.log(newPath,data);
+
+              fs.writeFile(newPath, data, function (err) {
+                //console.log(err);
+                //console.log("<img src='/upload-images/"+questionId+"-"+fileName+noOfImg+"."+fileType+"' width='100' height='100' alt='Question Image'></img>");
+                if(!err){
+                    uploadedImg[location] = "<img src='/upload-images/"+questionId+"-"+newName+"' width='100' height='100' alt='Question Image'></img>";
+                } else {
+                    uploadedImg[location] = "";
+                }
+                //noOfImg++;
+                deferred.resolve();
+              });
+            });
+        }
+
+        return deferred.promise;
+
+   }
    /* console.log(JSON.stringify(obj));
     connection.query('INSERT INTO Questions SET ?', obj, function(error){
         if(error){

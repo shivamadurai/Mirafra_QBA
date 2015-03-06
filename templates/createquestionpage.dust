@@ -29,19 +29,21 @@
 
 			<li>
 				<label class="cat_heading">Question type</label>
-				<select id='answer_type' ng-change="AnswerTypeChange(this, event)" ng-model='obj.z' ng-options=" at.State for at in questiontypes"><option value="">-- Question Type --</option></select>
-				<input type="hidden" name="answertype" value="{~lb}{~lb}obj.z.QuestionTypeId{~rb}{~rb}"/>
+				<select id='answer_type' ng-change="QuestionTypeChange(this, event)" ng-model='obj.z' ng-options=" at.State for at in questiontypes"><option value="">-- Question Type --</option></select>
+				<input type="hidden" name="questiontype" value="{~lb}{~lb}obj.z.QuestionTypeId{~rb}{~rb}"/>
 			</li>
 
 
 			<li>
 				<label class="cat_heading">Question Level</label>
 				<select id='question_level_type' ng-model='obj.a' ng-options=" quesLev.State for quesLev in questionlevels"><option value="">-- Question Level --</option></select>
-				<input type="hidden" name="answertype" value="{~lb}{~lb}obj.a.QuestionLevelId{~rb}{~rb}"/>
+				<input type="hidden" name="questionlevel" value="{~lb}{~lb}obj.a.QuestionLevelId{~rb}{~rb}"/>
 			</li>
 
 		</ul>
-		<input type="hidden" name="authorid" value="{username}" />
+		<input type="hidden" name="authorname" value="{username}" />
+		<input type="hidden" name="authorid" value="{userid}" />
+		<input type="hidden" name="approverid" value="{approverid}" />
 
 		<div class="textfieldsContainer">
 
@@ -150,7 +152,7 @@
 	<h1> Preview</h1>
 	<ul class="category_hdr" >
 		<li>
-			<label >Subject : <span class="res_catrgory">{~lb}{~lb}obj.x.SubjectName{~rb}{~rb}</span></label>
+			<label >Subject : {~lb}{~lb}obj.x.SubjectId{~rb}{~rb}</label>
 		</li>
 
 		<li>
@@ -204,10 +206,10 @@ pdpApp.controller("SelectController",function($scope, $http){
 	        });
         };
 
-        $scope.AnswerTypeChange = function(elem, event){
+        $scope.QuestionTypeChange = function(elem, event){
         	
-        	var type = this.obj.z.AnswerTypeId;
-
+        	var type = this.obj.z.QuestionTypeId;
+        	$('#multiple_answer input[type="checkbox"], #single_answer input[type="radio"]').attr('checked',false);
         	if(Number(type) == 1){  
         		$("#single_answer").show().removeAttr('disabled');
         		$("#multiple_answer").hide().attr('disabled','disabled');

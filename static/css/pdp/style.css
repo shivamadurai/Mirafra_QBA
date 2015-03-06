@@ -707,11 +707,25 @@ font-size:14px;
 #companyNewsHolder p{ text-align: center;}
 #companyNewsHolder p span{ position: absolute}
 
-
+/*************************/
 /* QBA styles*/
+/*************************/
+
+div#input_container{
+	position: absolute;
+	left:0%;
+}
+
+div#Preview_container{
+	position: absolute;
+	left: 100%;
+	display: none;
+}
+
 ul.category_hdr{
 	display: block;
 	width: 100%;
+	padding: 0;
 }
 ul.category_hdr_preview{
 	width: 90%;
@@ -749,6 +763,10 @@ div.image{
 
 }
 
+div#answers div.image{
+	width: 15%;
+}
+
 div.image div.upload{
 	width: 157px;
     height: 57px;
@@ -770,16 +788,6 @@ div.image div.upload img {
     top: 65px;
     width: 300px;
 
-}
-
-div.estimates{
-	position: relative;
-	top: 65px;
-}
-
-div#ans_result{
-	position: relative;
-	top: 65px;
 }
 
 div#answers div.options{

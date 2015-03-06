@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="/ckeditor/contents.css"></link>
 	<link rel="stylesheet" type="text/css" href="/ckeditor/highlight.css"></link>
 
-<div class="container" ng-app="Selectbox" ng-controller="SelectController">
+<div id="input_container" class="container" ng-app="Selectbox" ng-controller="SelectController">
 	<form method="post" action="/createQuestion" enctype="multipart/form-data">
 		<h1> Create New Question</h1>
 		<ul class="category_hdr" >
@@ -115,34 +115,59 @@
 				</div>
 			</div>
 
-		<div class="estimates">
-			<h2> Time Estimate: <span style="font-size:11px;">(In Minutes)</span></h2>
-			<input type="number" name="time_estimate" value=""/>
-		</div>
-		<div id="ans_result">
-			
-			<h2> Answer <span style="font-size:11px;">(Select the appropriate Question Type)</span>:</h2>
-			<div id="single_answer" class="left_30" style="display:none">
-				<label><input type="radio" name="answer" value="A"/>Option A</label>
-				<label><input type="radio" name="answer" value="B"/>Option B</label>
-				<label><input type="radio" name="answer" value="C"/>Option C</label>
-				<label><input type="radio" name="answer" value="D"/>Option D</label>
+			<div class="estimates">
+				<h2> Time Estimate: <span style="font-size:11px;">(In Minutes)</span></h2>
+				<input type="number" name="time_estimate" value=""/>
 			</div>
-			<div id="multiple_answer" class="left_30" style="display:none">
-				<label><input type="checkbox" name="answer" value="A"/>Option A</label>
-				<label><input type="checkbox" name="answer" value="B"/>Option B</label>
-				<label><input type="checkbox" name="answer" value="C"/>Option C</label>
-				<label><input type="checkbox" name="answer" value="D"/>Option D</label>
+			<div id="ans_result">
+				
+				<h2> Answer <span style="font-size:11px;">(Select the appropriate Question Type)</span>:</h2>
+				<div id="single_answer" class="left_30" style="display:none">
+					<label><input type="radio" name="answer" value="A"/>Option A</label>
+					<label><input type="radio" name="answer" value="B"/>Option B</label>
+					<label><input type="radio" name="answer" value="C"/>Option C</label>
+					<label><input type="radio" name="answer" value="D"/>Option D</label>
+				</div>
+				<div id="multiple_answer" class="left_30" style="display:none">
+					<label><input type="checkbox" name="answer" value="A"/>Option A</label>
+					<label><input type="checkbox" name="answer" value="B"/>Option B</label>
+					<label><input type="checkbox" name="answer" value="C"/>Option C</label>
+					<label><input type="checkbox" name="answer" value="D"/>Option D</label>
+				</div>
+				
 			</div>
-			
 		</div>
-		
 		<div id="button_ctrls">
 			<input type="reset" value="Reset"/>
-			<input type="button" ng-click="OpenPreviewModal(this,event)" value="Preview" />
+			<input type="button" ng-click="OpenPreview(this,event)" value="Preview" />
 			<input type="submit" value="Submit" />
 		</div>
 	</form>
+</div>
+
+<div id="Preview_container">
+
+	<h1> Preview</h1>
+	<ul class="category_hdr" >
+		<li>
+			<label >Subject : <span class="res_catrgory">{~lb}{~lb}obj.x.SubjectName{~rb}{~rb}</span></label>
+		</li>
+
+		<li>
+			<label >SubTopic : <span class="res_catrgory">{~lb}{~lb}obj.y.Title{~rb}{~rb}</span></label>
+		</li>
+
+		<li>
+			<label >Question Type : <span class="res_catrgory">{~lb}{~lb}obj.z.State{~rb}{~rb}</span></label>
+		</li>
+
+
+		<li>
+			<label >Question Level : <span class="res_catrgory">{~lb}{~lb}obj.a.State{~rb}{~rb}</span></label>
+		</li>
+
+	</ul>
+
 </div>
 
 
@@ -212,6 +237,11 @@ pdpApp.controller("SelectController",function($scope, $http){
         questionLevelRequest.error(function(data, status, headers, config) {
             console.log("error",data, status, headers, config);
         });
+
+
+        $scope.OpenPreview = function(elem,event){
+
+        }
 
                 
 });
